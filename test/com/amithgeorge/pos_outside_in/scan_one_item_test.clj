@@ -14,16 +14,11 @@
 
 (defn- stub-catalogue
   [items]
-  (let [specs (hashmap->specs items)]
+  ;; spec to accept any provide key and return its value. return nil for any other input
+  (let [specs (conj (hashmap->specs items) [f/any] nil)]
     (f/reify-fake
      catalogue/Catalogue
      (price :fake specs))))
-
-(defn- mock-display
-  []
-  (f/reify-fake
-   display/Display
-   (price :recorded-fake)))
 
 (deftest item-found
   (testing "Given a barcode for an existing item, it should display its price"
@@ -31,6 +26,29 @@
       (let [irrelevant-price {:amount 10.0M}
             irrelevant-code "some product barcode"
             catalogue (stub-catalogue {irrelevant-code irrelevant-price})
-            display (mock-display)]
+            display (f/reify-fake
+                     display/Display
+                     (price :recorded-fake))]
         (sut/scan catalogue display irrelevant-code)
         (is (f/method-was-called-once display/price display [irrelevant-price]))))))
+
+(deftest item-not-found
+  (testing "Given a barcode for an item not in catalogue, it should display not found"
+    (f/with-fakes
+      (let [code-product-not-in-catalogue "this shouldn't be found"
+            catalogue (stub-catalogue {})
+            display (f/reify-fake
+                     display/Display
+                     (not-found :recorded-fake))]
+        (sut/scan catalogue display code-product-not-in-catalogue)
+        (is (f/method-was-called-once display/not-found display []))))))
+
+(deftest empty-code
+  (testing "Given an empty barcode, it should display scanning error"
+    (f/with-fakes
+      (let [display (f/reify-fake
+                     display/Display
+                     (invalid-code :recorded-fake))]
+        (sut/scan nil display "")
+        (is (f/method-was-called-once display/invalid-code display []))))))
+
