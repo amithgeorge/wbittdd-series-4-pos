@@ -2,14 +2,20 @@
   (:require [clojure.test :refer [deftest testing is]]
             [com.amithgeorge.pos-outside-in.catalogue :as catalogue]))
 
-(defn- create-catalogue
-  [& {:keys [include exclude]}]
+(defn- create-inmemory-catalogue
+  [include exclude]
   (reify catalogue/Catalogue
     (price
       [_ code]
       (cond
         (= code (:code exclude)) nil
         (= code (:code include)) (:price include)))))
+
+(defn- create-catalogue
+  [& {:keys [include exclude]}]
+  (let [impl-env (or (System/getenv "CONTRACT_IMPL") "test")]
+    (case impl-env
+      "test" (create-inmemory-catalogue include exclude))))
 
 (deftest code-present-in-catalogue
   (testing "Given a code present in the catalgoue, return its price"
@@ -25,3 +31,4 @@
           catalogue (create-catalogue :exclude item-to-exclude)
           actual-price (catalogue/price catalogue (:code item-to-exclude))]
       (is (nil? actual-price)))))
+
