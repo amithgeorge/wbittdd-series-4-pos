@@ -1,34 +1,22 @@
 (ns com.amithgeorge.pos-outside-in.contracts.display-message-test
   (:require [clojure.test :refer [deftest testing is]]
-            [com.amithgeorge.pos-outside-in.display :as display]))
-
-(defn- create-fake-display
-  [method]
-  (case method
-    :price (reify display/Display
-             (price [_ price]
-               nil))
-    :not-found (reify display/Display
-                 (not-found [_]
-                   nil))
-    :invalid-code (reify display/Display
-                    (invalid-code [_]
-                      nil))))
+            [com.amithgeorge.pos-outside-in.display :as display]
+            [com.amithgeorge.pos-outside-in.impl.console-display :as console-display]))
 
 (deftest display-price
   (testing "accept an amount, don't throw an exception"
-    (let [display (create-fake-display :price)]
+    (let [display (console-display/instance)]
       (display/price display {:amount 13.9M})
       (is true))))
 
 (deftest display-not-found-error-message
   (testing "accept no arguments, don't throw an exception"
-    (let [display (create-fake-display :not-found)]
+    (let [display (console-display/instance)]
       (display/not-found display)
       (is true))))
 
 (deftest display-invalid-code-error-message
   (testing "accept no arguments, don't throw an exception"
-    (let [display (create-fake-display :invalid-code)]
+    (let [display (console-display/instance)]
       (display/invalid-code display)
       (is true))))
