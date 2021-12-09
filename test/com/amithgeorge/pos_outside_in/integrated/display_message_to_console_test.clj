@@ -22,3 +22,13 @@
                          (with-out-str
                            (display/invalid-code display)))]
       (is (= ["Scanning error. Invalid code."] std-out-lines)))))
+
+(deftest display-formatted-price
+  (testing "accept an amount, prints formatted price to stdout"
+    (let [display (reify display/Display
+                    (price [_ price]
+                      (println (format "USD %s" (:amount price)))))
+          std-out-lines (str/split-lines
+                         (with-out-str
+                           (display/price display {:amount 10.39M})))]
+      (is (= ["USD 10.39"] std-out-lines)))))
