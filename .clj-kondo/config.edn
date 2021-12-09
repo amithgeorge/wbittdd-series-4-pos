@@ -1,0 +1,3 @@
+{:linters
+ {:unresolved-symbol
+  {:exclude [(clj-fakes.core/reify-fake)]}}}
