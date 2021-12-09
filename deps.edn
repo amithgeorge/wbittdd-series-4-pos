@@ -1,5 +1,6 @@
 {:paths ["src" "resources"]
- :deps {org.clojure/clojure {:mvn/version "1.10.3"}}
+ :deps {org.clojure/clojure {:mvn/version "1.10.3"}
+        metosin/malli {:mvn/version "0.7.0"}}
  :aliases
  {:run-main {:main-opts ["-m" "com.amithgeorge.pos-outside-in.main"]}
   :test {:extra-paths ["test"]
