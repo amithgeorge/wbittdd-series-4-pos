@@ -14,18 +14,18 @@
   [amount-1 amount-2]
   (merge-with + amount-1 amount-2))
 
-(defn add-to
+(defn add
   [cart code price]
   (update cart :items conj {:code code :price price}))
 
-(defn empty-cart?
+(defn empty?
   [cart]
   (clojure.core/empty? (:items cart)))
 
-(defn total-cart
+(defn total
   {:malli/schema [:=> [:cat CartSchema] catalogue/AmountSchema]}
   [cart]
-  (if (empty-cart? cart)
+  (if (empty? cart)
     (throw (IllegalStateException. "Cannot total an empty cart. Check for empty using cart/empty?"))
     (reduce add-amounts (map :price (:items cart)))))
 

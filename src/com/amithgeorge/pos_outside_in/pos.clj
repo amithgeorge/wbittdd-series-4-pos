@@ -11,12 +11,12 @@
      (display/invalid-code display)
      (if-let [product-price (catalogue/price catalogue code)]
        (do
-         (persistence/save-cart! storage (cart/add-to cart code product-price))
+         (persistence/save-cart! storage (cart/add cart code product-price))
          (display/price display product-price))
        (display/not-found display)))))
 
 (defn total
   ([display cart]
-   (if (cart/empty-cart? cart)
+   (if (cart/empty? cart)
      (display/cart-empty display)
-     (display/total display (cart/total-cart cart)))))
+     (display/total display (cart/total cart)))))
