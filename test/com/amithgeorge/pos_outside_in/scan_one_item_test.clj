@@ -60,15 +60,11 @@
                      (not-found :recorded-fake))
             storage (f/reify-fake
                      persistence/Persistence
-                     (save-cart! :recorded-fake))
-            inmemory-cart (f/reify-fake
-                           cart/Cart
-                           (add :recorded-fake))]
-        (sut/scan catalogue display storage inmemory-cart nil code-product-not-in-catalogue)
+                     (save-cart! :recorded-fake))]
+        (sut/scan catalogue display storage nil code-product-not-in-catalogue)
         (testing "It should display not found"
           (is (f/method-was-called-once display/not-found display [])))
         (testing "It should not add item to cart"
-          (is (f/method-was-not-called cart/add inmemory-cart))
           (is (f/method-was-not-called persistence/save-cart! storage)))))))
 
 (deftest empty-code
@@ -79,14 +75,10 @@
                      (invalid-code :recorded-fake))
             storage (f/reify-fake
                      persistence/Persistence
-                     (save-cart! :recorded-fake))
-            inmemory-cart (f/reify-fake
-                           cart/Cart
-                           (add :recorded-fake))]
-        (sut/scan nil display storage inmemory-cart nil "")
+                     (save-cart! :recorded-fake))]
+        (sut/scan nil display storage nil "")
         (testing "It should display scanning error"
           (is (f/method-was-called-once display/invalid-code display [])))
         (testing "It should not add item to cart"
-          (is (f/method-was-not-called cart/add inmemory-cart))
           (is (f/method-was-not-called persistence/save-cart! storage)))))))
 
