@@ -19,7 +19,7 @@
         (sut/total display inmemory-cart initial-cart)
         (is (f/method-was-called-once display/cart-empty display []))))))
 
-(deftest cart-with-items
+(deftest ^:kaocha/skip cart-with-items
   (testing "Cart has items, it should display total"
     (f/with-fakes
       (let [total {:amount 89.1M}
