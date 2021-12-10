@@ -3,8 +3,12 @@
   (:require [com.amithgeorge.pos-outside-in.catalogue :as catalogue]))
 
 (def CartItemSchema
-  [:map [:code :string]
+  [:map
+   [:code :string]
    [:price catalogue/AmountSchema]])
+
+(def CartSchema
+  [:map [:items [:sequential CartItemSchema]]])
 
 (defprotocol Cart
   (add [this item] "Adds item to cart")
