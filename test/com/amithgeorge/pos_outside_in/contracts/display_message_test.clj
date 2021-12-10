@@ -20,3 +20,15 @@
     (let [display (console-display/instance)]
       (display/invalid-code display)
       (is true))))
+
+(deftest display-cart-empty-error-message
+  (testing "accept no arguments, don't throw an exception"
+    (let [display (console-display/instance)]
+      (display/cart-empty display)
+      (is true))))
+
+(deftest display-total-message
+  (testing "accept an amount, don't throw an exception"
+    (let [display (console-display/instance)]
+      (display/total display {:amount 23.97M})
+      (is true))))
