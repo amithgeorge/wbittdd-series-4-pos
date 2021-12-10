@@ -12,24 +12,25 @@
       (let [display (f/reify-fake
                      display/Display
                      (cart-empty :recorded-fake))
-            initial-cart nil
+            initial-cart {:items []}
             inmemory-cart (f/reify-fake
                            cart/Cart
-                           (empty? :fake [[] true]))]
+                           (empty? :optional-fake [[] true]))]
         (sut/total display inmemory-cart initial-cart)
         (is (f/method-was-called-once display/cart-empty display []))))))
 
 (deftest cart-with-items
   (testing "Cart has items, it should display total"
     (f/with-fakes
-      (let [total {:amount 19.7M}
+      (let [total {:amount 89.1M}
             display (f/reify-fake
                      display/Display
                      (total :recorded-fake))
-            initial-cart nil
+            cart-with-items {:items [{:code "irrelevant item 1 code" :price {:amount 13.9M}}
+                                     {:code "irrelevant item 2 code" :price {:amount 75.2M}}]}
             inmemory-cart (f/reify-fake
                            cart/Cart
-                           (empty? :fake [[] false])
+                           (empty? :optional-fake [[] false])
                            (total :fake [[] total]))]
-        (sut/total display inmemory-cart initial-cart)
+        (sut/total display inmemory-cart cart-with-items)
         (is (f/method-was-called-once display/total display [total]))))))

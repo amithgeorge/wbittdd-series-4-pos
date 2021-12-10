@@ -19,3 +19,7 @@
 (defn add-to
   [cart code price]
   (update cart :items conj {:code code :price price}))
+
+(defn empty-cart?
+  [cart]
+  (clojure.core/empty? (:items cart)))
