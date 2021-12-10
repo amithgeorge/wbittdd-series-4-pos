@@ -5,5 +5,5 @@
   [:map [:code :string]
    [:price catalogue/AmountSchema]])
 
-(defn add
-  [cart item])
+(defprotocol Cart
+  (add [this item] "Adds item to cart"))

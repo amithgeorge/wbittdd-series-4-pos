@@ -31,14 +31,18 @@
             display (f/reify-fake
                      display/Display
                      (price :recorded-fake))
+            cart (f/reify-fake
+                  cart/Cart
+                  (add :recorded-fake [[(f/arg #(m/validate cart/CartItemSchema %1))] nil]))
             add-to-cart (f/recorded-fake [[(f/arg #(m/validate cart/CartItemSchema %1))] nil])]
-        (sut/scan catalogue display add-to-cart irrelevant-code)
+        (sut/scan catalogue display add-to-cart cart irrelevant-code)
 
         (testing "It should display its price"
           (is (f/method-was-called-once display/price display [irrelevant-price])))
 
         (testing "It should add item to cart"
-          (is (f/was-called-once add-to-cart [{:code irrelevant-code :price irrelevant-price}])))))))
+          (is (f/was-called-once add-to-cart [{:code irrelevant-code :price irrelevant-price}]))
+          (is (f/method-was-called-once cart/add cart [{:code irrelevant-code :price irrelevant-price}])))))))
 
 (deftest item-not-found
   (testing "Given a barcode for an item not in catalogue"
