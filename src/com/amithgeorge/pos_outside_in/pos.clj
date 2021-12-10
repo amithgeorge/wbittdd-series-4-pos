@@ -14,7 +14,8 @@
          (display/price display product-price))
        (display/not-found display)))))
 
-(defn total [display cart]
-  (if-let [total (cart/total cart)]
-    (display/total display total)
-    (display/cart-empty display)))
+(defn total
+  [display cart]
+  (if (cart/empty? cart)
+    (display/cart-empty display)
+    (display/total display (cart/total cart))))
