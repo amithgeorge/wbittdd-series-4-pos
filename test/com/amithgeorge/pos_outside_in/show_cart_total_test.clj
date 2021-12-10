@@ -1,11 +1,9 @@
 (ns com.amithgeorge.pos-outside-in.show-cart-total-test
-  (:require [clojure.test :refer [deftest testing is]]
-            [clj-fakes.core :as f]
-            [malli.core :as m]
-            [com.amithgeorge.pos-outside-in.pos :as sut]
-            [com.amithgeorge.pos-outside-in.catalogue :as catalogue]
+  (:require [clj-fakes.core :as f]
+            [clojure.test :refer [deftest is testing]]
+            [com.amithgeorge.pos-outside-in.cart :as cart]
             [com.amithgeorge.pos-outside-in.display :as display]
-            [com.amithgeorge.pos-outside-in.cart :as cart]))
+            [com.amithgeorge.pos-outside-in.pos :as sut]))
 
 (deftest empty-cart
   (testing "Total of an empty cart, it should display empty cart message"

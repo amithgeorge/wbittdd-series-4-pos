@@ -1,11 +1,11 @@
 (ns com.amithgeorge.pos-outside-in.scan-one-item-test
-  (:require [clojure.test :refer [deftest testing is]]
-            [clj-fakes.core :as f]
-            [malli.core :as m]
-            [com.amithgeorge.pos-outside-in.pos :as sut]
+  (:require [clj-fakes.core :as f]
+            [clojure.test :refer [deftest is testing]]
+            [com.amithgeorge.pos-outside-in.cart :as cart]
             [com.amithgeorge.pos-outside-in.catalogue :as catalogue]
             [com.amithgeorge.pos-outside-in.display :as display]
-            [com.amithgeorge.pos-outside-in.cart :as cart]))
+            [com.amithgeorge.pos-outside-in.pos :as sut]
+            [malli.core :as m]))
 
 (defn- hashmap->specs
   [m]
