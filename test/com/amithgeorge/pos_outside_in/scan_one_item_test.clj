@@ -32,12 +32,14 @@
             display (f/reify-fake
                      display/Display
                      (price :recorded-fake))
+            expected-cart {:items [{:code irrelevant-code :price irrelevant-price}]}
             inmemory-cart (f/reify-fake
                            cart/Cart
-                           (add :recorded-fake [[(f/arg #(m/validate cart/CartItemSchema %1))] nil]))
+                           (add :recorded-fake [[(f/arg #(m/validate cart/CartItemSchema %1))] nil])
+                           (state :fake [f/any expected-cart]))
             storage (f/reify-fake
                      persistence/Persistence
-                     (save-cart! :recorded-fake [[{}] nil]))]
+                     (save-cart! :recorded-fake [[(f/arg #(m/validate cart/CartSchema %1))] nil]))]
         (sut/scan catalogue display storage inmemory-cart irrelevant-code)
 
         (testing "It should display its price"
@@ -45,7 +47,7 @@
 
         (testing "It should add item to cart"
           (is (f/method-was-called-once cart/add inmemory-cart [{:code irrelevant-code :price irrelevant-price}]))
-          (is (f/method-was-called-once persistence/save-cart! storage [{}])))))))
+          (is (f/method-was-called-once persistence/save-cart! storage [expected-cart])))))))
 
 (deftest item-not-found
   (testing "Given a barcode for an item not in catalogue"

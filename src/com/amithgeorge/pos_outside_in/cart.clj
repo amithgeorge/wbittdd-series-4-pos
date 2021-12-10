@@ -13,4 +13,5 @@
 (defprotocol Cart
   (add [this item] "Adds item to cart")
   (empty? [this] "Returns true if cart is empty")
-  (total [this] "Return the sum of prices of all items in cart"))
+  (total [this] "Return the sum of prices of all items in cart")
+  (state [this] "Temp return the state of cart"))

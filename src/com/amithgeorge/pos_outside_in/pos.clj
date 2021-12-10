@@ -20,7 +20,7 @@
      (if-let [product-price (catalogue/price catalogue code)]
        (do
          (cart/add cart {:code code, :price product-price})
-         (persistence/save-cart! storage {})
+         (persistence/save-cart! storage (cart/state cart))
          (display/price display product-price))
        (display/not-found display)))))
 
