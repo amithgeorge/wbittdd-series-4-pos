@@ -41,22 +41,30 @@
           (is (f/was-called-once add-to-cart [{:code irrelevant-code :price irrelevant-price}])))))))
 
 (deftest item-not-found
-  (testing "Given a barcode for an item not in catalogue, it should display not found"
+  (testing "Given a barcode for an item not in catalogue"
     (f/with-fakes
       (let [code-product-not-in-catalogue "this shouldn't be found"
             catalogue (stub-catalogue {})
             display (f/reify-fake
                      display/Display
-                     (not-found :recorded-fake))]
-        (sut/scan catalogue display code-product-not-in-catalogue)
-        (is (f/method-was-called-once display/not-found display []))))))
+                     (not-found :recorded-fake))
+            add-to-cart (f/recorded-fake)]
+        (sut/scan catalogue display add-to-cart code-product-not-in-catalogue)
+        (testing "It should display not found"
+          (is (f/method-was-called-once display/not-found display [])))
+        (testing "It should not add item to cart"
+          (is (f/was-not-called add-to-cart)))))))
 
 (deftest empty-code
-  (testing "Given an empty barcode, it should display scanning error"
+  (testing "Given an empty barcode"
     (f/with-fakes
       (let [display (f/reify-fake
                      display/Display
-                     (invalid-code :recorded-fake))]
-        (sut/scan nil display "")
-        (is (f/method-was-called-once display/invalid-code display []))))))
+                     (invalid-code :recorded-fake))
+            add-to-cart (f/recorded-fake)]
+        (sut/scan nil display add-to-cart "")
+        (testing "It should display scanning error"
+          (is (f/method-was-called-once display/invalid-code display [])))
+        (testing "It should not add item to cart"
+          (is (f/was-not-called add-to-cart)))))))
 
