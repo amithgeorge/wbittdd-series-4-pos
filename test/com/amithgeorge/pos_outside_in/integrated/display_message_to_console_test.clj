@@ -1,8 +1,8 @@
 (ns com.amithgeorge.pos-outside-in.integrated.display-message-to-console-test
-  (:require [clojure.test :refer [deftest testing is]]
+  (:require [clojure.string :as str]
+            [clojure.test :refer [deftest is testing]]
             [com.amithgeorge.pos-outside-in.display :as display]
-            [com.amithgeorge.pos-outside-in.impl.console-display :as console-display]
-            [clojure.string :as str]))
+            [com.amithgeorge.pos-outside-in.impl.console-display :as console-display]))
 
 (deftest display-not-found-error-message
   (testing "prints not found message to stdout"

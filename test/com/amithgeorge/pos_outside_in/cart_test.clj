@@ -1,10 +1,7 @@
 (ns com.amithgeorge.pos-outside-in.cart-test
   (:refer-clojure :exclude [empty?])
-  (:require [clj-fakes.core :as f]
-            [clojure.test :refer [deftest is testing]]
-            [com.amithgeorge.pos-outside-in.cart :as cart]
-            [com.amithgeorge.pos-outside-in.display :as display]
-            [com.amithgeorge.pos-outside-in.pos :as sut]))
+  (:require [clojure.test :refer [deftest is testing]]
+            [com.amithgeorge.pos-outside-in.cart :as cart]))
 
 (deftest total-empty-cart
   (testing "Given an empty cart, total should throw an exception"

@@ -1,8 +1,8 @@
 (ns com.amithgeorge.pos-outside-in.pos
-  (:require [com.amithgeorge.pos-outside-in.catalogue :as catalogue]
-            [com.amithgeorge.pos-outside-in.display :as display]
-            [clojure.string :as str]
+  (:require [clojure.string :as str]
             [com.amithgeorge.pos-outside-in.cart :as cart]
+            [com.amithgeorge.pos-outside-in.catalogue :as catalogue]
+            [com.amithgeorge.pos-outside-in.display :as display]
             [com.amithgeorge.pos-outside-in.persistence :as persistence]))
 
 (defn scan

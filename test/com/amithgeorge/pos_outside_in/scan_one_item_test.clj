@@ -4,9 +4,9 @@
             [com.amithgeorge.pos-outside-in.cart :as cart]
             [com.amithgeorge.pos-outside-in.catalogue :as catalogue]
             [com.amithgeorge.pos-outside-in.display :as display]
+            [com.amithgeorge.pos-outside-in.persistence :as persistence]
             [com.amithgeorge.pos-outside-in.pos :as sut]
-            [malli.core :as m]
-            [com.amithgeorge.pos-outside-in.persistence :as persistence]))
+            [malli.core :as m]))
 
 (defn- hashmap->specs
   [m]
