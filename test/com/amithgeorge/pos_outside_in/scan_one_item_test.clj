@@ -5,7 +5,8 @@
             [com.amithgeorge.pos-outside-in.catalogue :as catalogue]
             [com.amithgeorge.pos-outside-in.display :as display]
             [com.amithgeorge.pos-outside-in.pos :as sut]
-            [malli.core :as m]))
+            [malli.core :as m]
+            [com.amithgeorge.pos-outside-in.persistence :as persistence]))
 
 (defn- hashmap->specs
   [m]
@@ -31,16 +32,20 @@
             display (f/reify-fake
                      display/Display
                      (price :recorded-fake))
-            cart (f/reify-fake
-                  cart/Cart
-                  (add :recorded-fake [[(f/arg #(m/validate cart/CartItemSchema %1))] nil]))]
-        (sut/scan catalogue display cart irrelevant-code)
+            inmemory-cart (f/reify-fake
+                           cart/Cart
+                           (add :recorded-fake [[(f/arg #(m/validate cart/CartItemSchema %1))] nil]))
+            storage (f/reify-fake
+                     persistence/Persistence
+                     (save-cart! :recorded-fake [[{}] nil]))]
+        (sut/scan catalogue display storage inmemory-cart irrelevant-code)
 
         (testing "It should display its price"
           (is (f/method-was-called-once display/price display [irrelevant-price])))
 
         (testing "It should add item to cart"
-          (is (f/method-was-called-once cart/add cart [{:code irrelevant-code :price irrelevant-price}])))))))
+          (is (f/method-was-called-once cart/add inmemory-cart [{:code irrelevant-code :price irrelevant-price}]))
+          (is (f/method-was-called-once persistence/save-cart! storage [{}])))))))
 
 (deftest item-not-found
   (testing "Given a barcode for an item not in catalogue"
