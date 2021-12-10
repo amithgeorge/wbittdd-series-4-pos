@@ -10,12 +10,6 @@
 (def CartSchema
   [:map [:items [:sequential CartItemSchema]]])
 
-(defprotocol Cart
-  (add [this item] "Adds item to cart")
-  (empty? [this] "Returns true if cart is empty")
-  (total [this] "Return the sum of prices of all items in cart")
-  (state [this] "Temp return the state of cart"))
-
 (defn- add-amounts
   [amount-1 amount-2]
   (merge-with + amount-1 amount-2))
