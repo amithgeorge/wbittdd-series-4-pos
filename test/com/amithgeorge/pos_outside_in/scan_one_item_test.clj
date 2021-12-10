@@ -52,12 +52,16 @@
             display (f/reify-fake
                      display/Display
                      (not-found :recorded-fake))
+            cart (f/reify-fake
+                  cart/Cart
+                  (add :recorded-fake))
             add-to-cart (f/recorded-fake)]
-        (sut/scan catalogue display add-to-cart code-product-not-in-catalogue)
+        (sut/scan catalogue display add-to-cart cart code-product-not-in-catalogue)
         (testing "It should display not found"
           (is (f/method-was-called-once display/not-found display [])))
         (testing "It should not add item to cart"
-          (is (f/was-not-called add-to-cart)))))))
+          (is (f/was-not-called add-to-cart))
+          (is (f/method-was-not-called cart/add cart)))))))
 
 (deftest empty-code
   (testing "Given an empty barcode"
@@ -65,10 +69,14 @@
       (let [display (f/reify-fake
                      display/Display
                      (invalid-code :recorded-fake))
+            cart (f/reify-fake
+                  cart/Cart
+                  (add :recorded-fake))
             add-to-cart (f/recorded-fake)]
-        (sut/scan nil display add-to-cart "")
+        (sut/scan nil display add-to-cart cart "")
         (testing "It should display scanning error"
           (is (f/method-was-called-once display/invalid-code display [])))
         (testing "It should not add item to cart"
-          (is (f/was-not-called add-to-cart)))))))
+          (is (f/was-not-called add-to-cart))
+          (is (f/method-was-not-called cart/add cart)))))))
 
