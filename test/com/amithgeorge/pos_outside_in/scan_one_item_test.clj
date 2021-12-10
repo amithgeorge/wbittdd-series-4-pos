@@ -47,7 +47,7 @@
           (is (f/method-was-called-once display/price display [irrelevant-price])))
 
         (testing "It should add item to cart"
-          (is (f/method-was-called-once cart/add inmemory-cart [{:code irrelevant-code :price irrelevant-price}]))
+          (is (f/method-was-not-called cart/add inmemory-cart))
           (is (f/method-was-called-once persistence/save-cart! storage [expected-cart])))))))
 
 (deftest item-not-found
@@ -58,14 +58,18 @@
             display (f/reify-fake
                      display/Display
                      (not-found :recorded-fake))
-            cart (f/reify-fake
-                  cart/Cart
-                  (add :recorded-fake))]
-        (sut/scan catalogue display cart code-product-not-in-catalogue)
+            storage (f/reify-fake
+                     persistence/Persistence
+                     (save-cart! :recorded-fake))
+            inmemory-cart (f/reify-fake
+                           cart/Cart
+                           (add :recorded-fake))]
+        (sut/scan catalogue display storage inmemory-cart nil code-product-not-in-catalogue)
         (testing "It should display not found"
           (is (f/method-was-called-once display/not-found display [])))
         (testing "It should not add item to cart"
-          (is (f/method-was-not-called cart/add cart)))))))
+          (is (f/method-was-not-called cart/add inmemory-cart))
+          (is (f/method-was-not-called persistence/save-cart! storage)))))))
 
 (deftest empty-code
   (testing "Given an empty barcode"
@@ -73,12 +77,16 @@
       (let [display (f/reify-fake
                      display/Display
                      (invalid-code :recorded-fake))
-            cart (f/reify-fake
-                  cart/Cart
-                  (add :recorded-fake))]
-        (sut/scan nil display cart "")
+            storage (f/reify-fake
+                     persistence/Persistence
+                     (save-cart! :recorded-fake))
+            inmemory-cart (f/reify-fake
+                           cart/Cart
+                           (add :recorded-fake))]
+        (sut/scan nil display storage inmemory-cart nil "")
         (testing "It should display scanning error"
           (is (f/method-was-called-once display/invalid-code display [])))
         (testing "It should not add item to cart"
-          (is (f/method-was-not-called cart/add cart)))))))
+          (is (f/method-was-not-called cart/add inmemory-cart))
+          (is (f/method-was-not-called persistence/save-cart! storage)))))))
 

@@ -19,7 +19,6 @@
      (display/invalid-code display)
      (if-let [product-price (catalogue/price catalogue code)]
        (do
-         (cart/add inmemory-cart {:code code, :price product-price})
          (persistence/save-cart! storage (cart/add-to cart code product-price))
          (display/price display product-price))
        (display/not-found display)))))
