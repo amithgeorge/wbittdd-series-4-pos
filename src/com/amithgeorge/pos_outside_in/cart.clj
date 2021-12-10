@@ -16,6 +16,10 @@
   (total [this] "Return the sum of prices of all items in cart")
   (state [this] "Temp return the state of cart"))
 
+(defn- add-amounts
+  [amount-1 amount-2]
+  (merge-with + amount-1 amount-2))
+
 (defn add-to
   [cart code price]
   (update cart :items conj {:code code :price price}))
@@ -23,3 +27,15 @@
 (defn empty-cart?
   [cart]
   (clojure.core/empty? (:items cart)))
+
+(defn total-cart
+  {:malli/schema [:=> [:cat CartSchema] catalogue/AmountSchema]}
+  [cart]
+  (if (empty-cart? cart)
+    (throw (IllegalStateException. "Cannot total an empty cart. Check for empty using cart/empty?"))
+    (reduce add-amounts (map :price (:items cart)))))
+
+(defn new
+  {:malli/schema [:=> :cat CartSchema]}
+  []
+  {:items []})
