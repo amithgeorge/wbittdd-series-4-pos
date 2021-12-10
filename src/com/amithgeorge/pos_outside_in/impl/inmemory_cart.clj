@@ -1,13 +1,14 @@
 (ns com.amithgeorge.pos-outside-in.impl.inmemory-cart
   (:require [malli.core :as m]
-            [com.amithgeorge.pos-outside-in.cart :as cart]
-            [com.amithgeorge.pos-outside-in.catalogue :as catalogue]))
+            [com.amithgeorge.pos-outside-in.cart :as cart]))
 
 (defn instance
   [initial-items]
   (let [state (atom {:items (or initial-items [])})]
     (assert (m/validate cart/CartSchema @state))
     (reify cart/Cart
+      (empty? [_]
+        (clojure.core/empty? (:items @state)))
       (total [_]
         (let [{:keys [items]} @state]
           (if (clojure.core/empty? items)

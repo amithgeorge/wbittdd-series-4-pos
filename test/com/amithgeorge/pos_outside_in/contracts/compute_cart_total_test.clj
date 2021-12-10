@@ -24,3 +24,14 @@
           result (cart/total cart)]
       (is (m/validate catalogue/AmountSchema result))
       (is (= {:amount 109.8M} result)))))
+
+(deftest empty?-no-items-in-cart
+  (testing "returns true for cart with no items"
+    (let [cart (inmemory-cart/instance [])]
+      (is (true? (cart/empty? cart))))))
+
+(deftest empty?-items-in-cart
+  (testing "returns false for cart with items"
+    (let [irrelevant-item {:code "::irrelevant code 1::" :price {:amount 12.3M}}
+          cart (inmemory-cart/instance [irrelevant-item])]
+      (is (false? (cart/empty? cart))))))
