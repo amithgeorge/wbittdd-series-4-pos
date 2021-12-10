@@ -1,9 +1,11 @@
 (ns com.amithgeorge.pos-outside-in.scan-one-item-test
   (:require [clojure.test :refer [deftest testing is]]
             [clj-fakes.core :as f]
+            [malli.core :as m]
             [com.amithgeorge.pos-outside-in.pos :as sut]
             [com.amithgeorge.pos-outside-in.catalogue :as catalogue]
-            [com.amithgeorge.pos-outside-in.display :as display]))
+            [com.amithgeorge.pos-outside-in.display :as display]
+            [com.amithgeorge.pos-outside-in.cart :as cart]))
 
 (defn- hashmap->specs
   [m]
@@ -21,16 +23,22 @@
      (price :fake specs))))
 
 (deftest item-found
-  (testing "Given a barcode for an existing item, it should display its price"
+  (testing "Given a barcode for an existing item"
     (f/with-fakes
       (let [irrelevant-price {:amount 10.0M}
             irrelevant-code "some product barcode"
             catalogue (stub-catalogue {irrelevant-code irrelevant-price})
             display (f/reify-fake
                      display/Display
-                     (price :recorded-fake))]
-        (sut/scan catalogue display irrelevant-code)
-        (is (f/method-was-called-once display/price display [irrelevant-price]))))))
+                     (price :recorded-fake))
+            add-to-cart (f/recorded-fake [[(f/arg #(m/validate cart/CartItemSchema %1))] nil])]
+        (sut/scan catalogue display add-to-cart irrelevant-code)
+
+        (testing "It should display its price"
+          (is (f/method-was-called-once display/price display [irrelevant-price])))
+
+        (testing "It should add item to cart"
+          (is (f/was-called-once add-to-cart [{:code irrelevant-code :price irrelevant-price}])))))))
 
 (deftest item-not-found
   (testing "Given a barcode for an item not in catalogue, it should display not found"

@@ -4,9 +4,17 @@
             [clojure.string :as str]))
 
 (defn scan
-  [catalogue display code]
-  (if (str/blank? code)
-    (display/invalid-code display)
-    (if-let [product-price (catalogue/price catalogue code)]
-      (display/price display product-price)
-      (display/not-found display))))
+  ([catalogue display code]
+   (if (str/blank? code)
+     (display/invalid-code display)
+     (if-let [product-price (catalogue/price catalogue code)]
+       (display/price display product-price)
+       (display/not-found display))))
+  ([catalogue display add-to-cart-fn code]
+   (if (str/blank? code)
+     (display/invalid-code display)
+     (if-let [product-price (catalogue/price catalogue code)]
+       (do
+         (add-to-cart-fn {:code code, :price product-price})
+         (display/price display product-price))
+       (display/not-found display)))))
