@@ -12,10 +12,11 @@
       (let [display (f/reify-fake
                      display/Display
                      (cart-empty :recorded-fake))
-            cart (f/reify-fake
-                  cart/Cart
-                  (empty? :fake [[] true]))]
-        (sut/total display cart)
+            initial-cart nil
+            inmemory-cart (f/reify-fake
+                           cart/Cart
+                           (empty? :fake [[] true]))]
+        (sut/total display inmemory-cart initial-cart)
         (is (f/method-was-called-once display/cart-empty display []))))))
 
 (deftest cart-with-items
@@ -25,9 +26,10 @@
             display (f/reify-fake
                      display/Display
                      (total :recorded-fake))
-            cart (f/reify-fake
-                  cart/Cart
-                  (empty? :fake [[] false])
-                  (total :fake [[] total]))]
-        (sut/total display cart)
+            initial-cart nil
+            inmemory-cart (f/reify-fake
+                           cart/Cart
+                           (empty? :fake [[] false])
+                           (total :fake [[] total]))]
+        (sut/total display inmemory-cart initial-cart)
         (is (f/method-was-called-once display/total display [total]))))))

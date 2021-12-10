@@ -16,7 +16,11 @@
        (display/not-found display)))))
 
 (defn total
-  [display cart]
-  (if (cart/empty? cart)
-    (display/cart-empty display)
-    (display/total display (cart/total cart))))
+  ([display cart]
+   (if (cart/empty? cart)
+     (display/cart-empty display)
+     (display/total display (cart/total cart))))
+  ([display inmemory-cart initial-cart]
+   (if (cart/empty? inmemory-cart)
+     (display/cart-empty display)
+     (display/total display (cart/total inmemory-cart)))))
