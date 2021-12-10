@@ -13,3 +13,8 @@
          (cart/add cart {:code code, :price product-price})
          (display/price display product-price))
        (display/not-found display)))))
+
+(defn total [display cart]
+  (if-let [total (cart/total cart)]
+    (display/total display total)
+    (display/cart-empty display)))

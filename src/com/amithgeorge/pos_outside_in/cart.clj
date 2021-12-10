@@ -6,4 +6,5 @@
    [:price catalogue/AmountSchema]])
 
 (defprotocol Cart
-  (add [this item] "Adds item to cart"))
+  (add [this item] "Adds item to cart")
+  (total [this] "Return the sum of prices of all items in cart"))
