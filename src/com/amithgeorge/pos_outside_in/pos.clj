@@ -27,4 +27,4 @@
        (display/total display (cart/total inmemory-cart)))
      (if (cart/empty-cart? initial-cart)
        (display/cart-empty display)
-       (display/total display (cart/total inmemory-cart))))))
+       (display/total display (cart/total-cart initial-cart))))))
