@@ -5,7 +5,7 @@
 
 (deftest total-empty-cart
   (testing "Given an empty cart, total should throw an exception"
-    (let [empty-cart (cart/new)]
+    (let [empty-cart (cart/new-cart)]
       (is (thrown? IllegalStateException (cart/total empty-cart))))))
 
 (deftest total-cart-items

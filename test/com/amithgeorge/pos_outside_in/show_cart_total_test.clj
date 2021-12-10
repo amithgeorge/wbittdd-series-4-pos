@@ -12,7 +12,7 @@
       (let [display (f/reify-fake
                      display/Display
                      (cart-empty :recorded-fake))
-            initial-cart (cart/new)]
+            initial-cart (cart/new-cart)]
         (sut/total display initial-cart)
         (is (f/method-was-called-once display/cart-empty display []))))))
 

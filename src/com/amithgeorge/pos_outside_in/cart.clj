@@ -14,7 +14,7 @@
   [amount-1 amount-2]
   (merge-with + amount-1 amount-2))
 
-(defn new
+(defn new-cart
   {:malli/schema [:=> :cat CartSchema]}
   []
   {:items []})
