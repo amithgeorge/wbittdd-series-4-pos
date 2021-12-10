@@ -7,8 +7,6 @@
 
 (defn scan
   ([catalogue display storage cart code]
-   (scan catalogue display storage nil cart code))
-  ([catalogue display storage inmemory-cart cart code]
    (if (str/blank? code)
      (display/invalid-code display)
      (if-let [product-price (catalogue/price catalogue code)]
