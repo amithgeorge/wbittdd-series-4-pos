@@ -17,14 +17,6 @@
 
 (defn total
   ([display cart]
-   (if (cart/empty? cart)
+   (if (cart/empty-cart? cart)
      (display/cart-empty display)
-     (display/total display (cart/total cart))))
-  ([display inmemory-cart initial-cart]
-   (if (nil? initial-cart)
-     (if (cart/empty? inmemory-cart)
-       (display/cart-empty display)
-       (display/total display (cart/total inmemory-cart)))
-     (if (cart/empty-cart? initial-cart)
-       (display/cart-empty display)
-       (display/total display (cart/total-cart initial-cart))))))
+     (display/total display (cart/total-cart cart)))))
