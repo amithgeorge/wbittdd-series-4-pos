@@ -9,6 +9,9 @@
     (reify cart/Cart
       (empty? [_]
         (clojure.core/empty? (:items @state)))
+      (add [_ item]
+        (assert (m/validate cart/CartItemSchema item))
+        (swap! state update :items (fn [items] (conj items item))))
       (total [_]
         (let [{:keys [items]} @state]
           (if (clojure.core/empty? items)

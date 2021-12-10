@@ -35,3 +35,12 @@
     (let [irrelevant-item {:code "::irrelevant code 1::" :price {:amount 12.3M}}
           cart (inmemory-cart/instance [irrelevant-item])]
       (is (false? (cart/empty? cart))))))
+
+(deftest add
+  (testing "adding an item to empty cart,"
+    (let [irrelevant-item {:code "::irrelevant code 1::" :price {:amount 12.3M}}
+          cart (inmemory-cart/instance [])]
+      (assert (cart/empty? cart))
+      (cart/add cart irrelevant-item)
+      (testing "cart should no longer be empty"
+        (is (false? (cart/empty? cart)))))))
